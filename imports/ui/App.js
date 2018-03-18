@@ -3,27 +3,49 @@ import ReactDOM from 'react-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Tasks } from '../api/tasks.js';
 import Task from './Task.js';
+import AccountsUIWrapper from './AccountsUIWrapper.js';
 
 // App component - represents the whole app
 class App extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      hideCompleted: false,
+    };
+  }
   handleSubmit(event) {
     event.preventDefault();
 
     // Find the text field via the React ref
     const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-    Tasks.insert({
-      text,
-      createdAt: new Date(), // current time
-    });
+    if (text) {
+      // These are the key-value pairs that are getting added to the mongo db
+      Tasks.insert({
+        text,
+        createdAt: new Date(), // current time
+        owner: Meteor.userId(),
+        username: Meteor.user().username,
+      });
+    }
+
 
     // Clear form
     ReactDOM.findDOMNode(this.refs.textInput).value = '';
   }
 
+  toggleHideCompleted() {
+    this.setState({
+      hideCompleted: !this.state.hideCompleted,
+    });
+  }
+
   renderTasks() {
-    return this.props.tasks.map((task) => (
+    let filteredTasks = this.props.tasks;
+    if (this.state.hideCompleted) {
+      filteredTasks = filteredTasks.filter(task => !task.checked);
+    }
+    return filteredTasks.map((task) => (
       <Task key={task._id} task={task} />
     ));
   }
@@ -34,11 +56,21 @@ class App extends Component {
         <br/><br/>
         <div className="container">
           <header>
-            <h1>List App</h1>
+            <h1>List 2.0 </h1>({this.props.incompleteCount} items)
+            <label className="hide-completed"><br/><br/>
+              <input type="checkbox" readOnly
+                checked={this.state.hideCompleted}
+                onClick={this.toggleHideCompleted.bind(this)}
+              />
+              Hide Checked
+            </label>
+            <AccountsUIWrapper />
             </header>
-            <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-              <input type="text" ref="textInput" placeholder="Add new list items here" />
-            </form>
+            { this.props.currentUser ?
+              <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+                <input type="text" ref="textInput" placeholder="Add new list items here" />
+              </form> : ""
+            }
 
           <ul>
             {this.renderTasks()}
@@ -52,5 +84,7 @@ class App extends Component {
 export default withTracker(() => {
   return {
     tasks: Tasks.find({}, { sort: {createdAt: -1}}).fetch(),
+    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
+    currentUser: Meteor.user(),
   };
 })(App);

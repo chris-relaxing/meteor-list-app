@@ -1,4 +1,4 @@
-# Meteor List App
+# Meteor List App ("Our List")
 
 A list app created with Meteor, React and MongoDB, following the tutorial (with many changes and customizations) here:<BR>
 https://www.meteor.com/tutorials/react/creating-an-app
@@ -17,10 +17,10 @@ This app is a list that allows my wife and I to separately sign in and add groce
 This app can be seen on my website here:<BR>
 http://bluegalaxy.info/js/our-list
 
-![alt text](http://bluegalaxy.info/images/ourlist1.jpg)
-<BR>
-![alt text](http://bluegalaxy.info/images/ourlist2.jpg)
-<BR>
 ![alt text](http://bluegalaxy.info/images/ourlist3.jpg)
+<BR><BR>
+![alt text](http://bluegalaxy.info/images/ourlist1.jpg)
+<BR><BR>
+![alt text](http://bluegalaxy.info/images/ourlist2.jpg)
 
 

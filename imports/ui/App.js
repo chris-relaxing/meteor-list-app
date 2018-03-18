@@ -20,13 +20,14 @@ class App extends Component {
     const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
     if (text) {
+      Meteor.call('tasks.insert', text);
       // These are the key-value pairs that are getting added to the mongo db
-      Tasks.insert({
-        text,
-        createdAt: new Date(), // current time
-        owner: Meteor.userId(),
-        username: Meteor.user().username,
-      });
+      // Tasks.insert({
+      //   text,
+      //   createdAt: new Date(), // current time
+      //   owner: Meteor.userId(),
+      //   username: Meteor.user().username,
+      // });
     }
 
 
@@ -56,7 +57,7 @@ class App extends Component {
         <br/><br/>
         <div className="container">
           <header>
-            <h1>List 2.0 </h1>({this.props.incompleteCount} items)
+            <h1>Our List</h1>({this.props.incompleteCount} items)
             <label className="hide-completed"><br/><br/>
               <input type="checkbox" readOnly
                 checked={this.state.hideCompleted}
@@ -69,7 +70,7 @@ class App extends Component {
             { this.props.currentUser ?
               <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
                 <input type="text" ref="textInput" placeholder="Add new list items here" />
-              </form> : ""
+              </form> : ''
             }
 
           <ul>
@@ -82,6 +83,7 @@ class App extends Component {
 }
 
 export default withTracker(() => {
+  Meteor.subscribe('tasks');
   return {
     tasks: Tasks.find({}, { sort: {createdAt: -1}}).fetch(),
     incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),

@@ -17,8 +17,10 @@ This app is a list that allows my wife and I to separately sign in and add groce
 
 ![alt text](http://bluegalaxy.info/images/ourlist3.jpg)
 <BR><BR>
+  
 ![alt text](http://bluegalaxy.info/images/ourlist1.jpg)
 <BR><BR>
+  
 ![alt text](http://bluegalaxy.info/images/ourlist2.jpg)
 
 
